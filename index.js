@@ -68,10 +68,17 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    app.get("/review/:id", async (req, res) => {
+    app.get("/reviewOne/:id", async (req, res) => {
       const { id } = req.params;
       const query = { _id: ObjectId(id) };
       const result = await reviewCollection.findOne(query);
+      res.send(result);
+    });
+    // delete review
+    app.delete("/review/:id", async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewCollection.deleteOne(query);
       res.send(result);
     });
     //review post
