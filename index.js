@@ -33,7 +33,14 @@ async function run() {
       const limitFlowerAndCakeItems = await cursor.limit(3).toArray();
       res.send(limitFlowerAndCakeItems);
     });
-
+    app.get("/FlowerAndCakeItems/:id", async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: ObjectId(id) };
+      const FlowerAndCakeItems = await flowerAndCakeItemsCollection.findOne(
+        query
+      );
+      res.send(FlowerAndCakeItems);
+    });
     // post data
     app.post("/flowerAndCakeItems", async (req, res) => {
       const recipe = req.body;
