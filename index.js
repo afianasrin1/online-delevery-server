@@ -43,8 +43,10 @@ async function run() {
     });
     // post data
     app.post("/flowerAndCakeItems", async (req, res) => {
-      const recipe = req.body;
-      const result = await flowerAndCakeItemsCollection.insertOne(recipe);
+      const flowerAndCakeItem = req.body;
+      const result = await flowerAndCakeItemsCollection.insertOne(
+        flowerAndCakeItem
+      );
       res.send(result);
     });
   } finally {
