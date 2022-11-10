@@ -62,16 +62,54 @@ async function run() {
       const review = await cursor.toArray();
       res.send(review);
     });
-    app.get("/review/:id", async (req, res) => {
-      const { id } = req.body;
-      const cursor = reviewCollection.find(id);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
+    // app.get("/review/:id", async (req, res) => {
+    //   const { id } = req.params;
+    //   const query = { _id: ObjectId(id) };
+    //   const result = await reviewCollection.findOne(query);
+    //   res.send(result);
+    // });
     app.get("/reviewOne/:id", async (req, res) => {
       const { id } = req.params;
       const query = { _id: ObjectId(id) };
       const result = await reviewCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/ourReview", verifyEmail, async (req, res) => {
+      const decoded = req.decoded;
+      if (decoded.email !== req.query.email) {
+        res.status(403).send({ message: "unauthorized access" });
+      }
+      let query = {};
+      if (req.query.email) {
+        query = {
+          email: req.query.email,
+        };
+      }
+      const cursor = reviewCollection.find(query);
+      const result = await cursor.sort({ _id: -1 }).toArray();
+      res.send(result);
+    });
+    // update review
+    app.put("/review/:id", async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: ObjectId(id) };
+      const review = req.body;
+      const options = { upsert: true };
+      const updateReview = {
+        $set: {
+          name: review.name,
+          start: review.start,
+          email: review.email,
+          userImg: review.userImg,
+          message: review.message,
+        },
+      };
+      const result = await reviewCollection.updateOne(
+        query,
+        updateReview,
+        options
+      );
       res.send(result);
     });
     // delete review
