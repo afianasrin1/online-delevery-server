@@ -15,15 +15,39 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-console.log(uri);
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
 
+async function run() {
+  try {
+    const flowerAndCakeItemsCollection = client
+      .db("assignmentREVIEW")
+      .collection("flowerAndCakeItems");
+    //get data from db
+    app.get("/flowerAndCakeItems", async (req, res) => {
+      const cursor = flowerAndCakeItemsCollection.find({});
+      const flowerAndCakeItems = await cursor.toArray();
+      res.send(flowerAndCakeItems);
+    });
+
+    app.get("/limitFlowerAndCakeItems", async (req, res) => {
+      const cursor = flowerAndCakeItemsCollection.find({});
+      const limitFlowerAndCakeItems = await cursor.limit(3).toArray();
+      res.send(limitFlowerAndCakeItems);
+    });
+
+    // post data
+    app.post("/recipes", async (req, res) => {
+      const recipe = req.body;
+      const result = await recipesCollection.insertOne(recipe);
+      res.send(result);
+    });
+  } finally {
+  }
+}
+run().catch((error) => console.error(error));
+
+//test for server running
 app.get("/", (req, res) => {
-  res.send("assignment review server is running");
+  res.send("assignment review Server is running");
 });
 app.listen(port, () => {
   console.log(`assignment review Server running on ${port}`);
