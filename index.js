@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,9 +18,12 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    //db
     const flowerAndCakeItemsCollection = client
       .db("assignmentREVIEW")
       .collection("flowerAndCakeItems");
+    const reviewCollection = client.db("assignmentREVIEW").collection("review");
+
     //get data from db
     app.get("/flowerAndCakeItems", async (req, res) => {
       const cursor = flowerAndCakeItemsCollection.find({});
