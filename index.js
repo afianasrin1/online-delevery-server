@@ -35,9 +35,9 @@ async function run() {
     });
 
     // post data
-    app.post("/recipes", async (req, res) => {
+    app.post("/flowerAndCakeItems", async (req, res) => {
       const recipe = req.body;
-      const result = await recipesCollection.insertOne(recipe);
+      const result = await flowerAndCakeItemsCollection.insertOne(recipe);
       res.send(result);
     });
   } finally {
